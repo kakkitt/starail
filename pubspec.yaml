@@ -1,0 +1,58 @@
+name: ai_phone_app
+description: "몰입형 AI 음성 경험 앱"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  
+  # 애니메이션 및 시각 효과
+  flutter_animate: ^4.2.0
+  simple_animations: ^5.0.0+3
+  rive: ^0.11.4
+  lottie: ^2.6.0
+  
+  # 오디오 관련
+  audioplayers: ^5.1.0
+  
+  # 유틸리티
+  shared_preferences: ^2.2.0
+  provider: ^6.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/audio/
+    - assets/lottie/
+    - assets/rive/
+  
+  fonts:
+    - family: GmarketSans
+      fonts:
+        - asset: assets/fonts/GmarketSansTTFLight.ttf
+          weight: 300
+        - asset: assets/fonts/GmarketSansTTFMedium.ttf
+          weight: 500
+        - asset: assets/fonts/GmarketSansTTFBold.ttf
+          weight: 700
+    
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Pretendard-Bold.ttf
+          weight: 700
