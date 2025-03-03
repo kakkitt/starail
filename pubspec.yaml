@@ -14,7 +14,7 @@ dependencies:
   # 애니메이션 및 시각 효과
   flutter_animate: ^4.2.0
   simple_animations: ^5.0.0+3
-  rive: ^0.11.4 as rive
+  rive: ^0.11.4
   lottie: ^2.6.0
   
   # 오디오 관련
@@ -33,10 +33,10 @@ flutter:
   uses-material-design: true
   
   assets:
-    - assets/images/
-    - assets/audio/
-    - assets/lottie/
-    - assets/rive/
+    # - assets/images/
+    # - assets/audio/
+    # - assets/lottie/
+    - assets/fonts/
   
   fonts:
     - family: GmarketSans
