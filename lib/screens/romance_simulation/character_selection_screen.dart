@@ -26,12 +26,12 @@ class _CharacterSelectionScreenState extends State<CharacterSelectionScreen> {
   final List<Map<String, String>> characters = [
     {
       'name': '미아',
-      'image': 'assets/images/character1.jpg',
+      'image': 'assets/images/character1.png',
       'description': '다정하고 사려 깊은 성격의 대학생. 예술과 음악을 좋아하며, 감성적인 대화를 나누는 것을 즐깁니다.',
     },
     {
-      'name': '준호',
-      'image': 'assets/images/character2.jpg',
+      'name': '시연',
+      'image': 'assets/images/character2.png',
       'description': '활발하고 유머 감각이 뛰어난 회사원. 스포츠를 좋아하며, 모험적인 데이트를 즐깁니다.',
     },
   ];
