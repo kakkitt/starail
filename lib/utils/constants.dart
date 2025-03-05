@@ -5,7 +5,9 @@ class AppColors {
   static const Color secondary = Color(0xFF00E1FF);
   static const Color tertiary = Color(0xFFFF44A1);
   static const Color quaternary = Color(0xFFFFB443);
-  static const Color background = Color(0xFF0A0C24);
+  
+  // 배경색을 어두운색에서 밝은 파스텔 하늘색으로 변경
+  static const Color background = Color(0xFFD4F1FF);  // 파스텔 하늘색
   static const Color darkBlue = Color(0xFF1A1154);
   
   // 파스텔 컬러
@@ -18,9 +20,9 @@ class AppColors {
 
 class AppTheme {
   static final ThemeData themeData = ThemeData(
-    brightness: Brightness.dark,
+    brightness: Brightness.light,  // 다크에서 라이트로 변경
     primaryColor: AppColors.primary,
-    colorScheme: const ColorScheme.dark(
+    colorScheme: const ColorScheme.light(  // 다크에서 라이트로 변경
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       tertiary: AppColors.tertiary,
@@ -53,8 +55,9 @@ class AppAssets {
 }
 
 class AppStrings {
-  static const String appName = 'VOICE NEXUS';
-  static const String appTagline = '몰입형 AI 음성 경험';
+  // 앱 제목과 부제목 - 이 부분을 수정하면 됩니다
+  static const String appName = 'Project StarRail';
+  static const String appTagline = '지금, 가장 설레는 AI와의 대화가 시작됩니다';
   
   static String welcomeMessage(String username) => '오늘도 만나서 반가워요, $username님!';
   

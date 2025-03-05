@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     ExperienceCard(
       title: "AI 전화",
       description: "현실같은 AI와의 자연스러운 대화",
-      icon: Icons.phone_in_talk,
+      icon: Icons.phone_rounded,  // 더 귀여운 아이콘으로 변경
       color: AppColors.primary,
       highlightColor: const Color(0xFF9E80FF),
       gradient: const LinearGradient(
@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     ExperienceCard(
       title: "음성 롤플레이",
       description: "중세 기사단 면접, 마법학교 입학시험 등",
-      icon: Icons.theater_comedy,
+      icon: Icons.psychology,  // 더 귀여운 아이콘으로 변경
       color: AppColors.secondary,
       highlightColor: const Color(0xFF5EEDFF),
       gradient: const LinearGradient(
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     ExperienceCard(
       title: "음성 RPG",
       description: "목소리로 즐기는 몰입형 어드벤처",
-      icon: Icons.sports_esports,
+      icon: Icons.sports_esports, 
       color: AppColors.quaternary,
       highlightColor: const Color(0xFFFFCF85),
       gradient: const LinearGradient(
@@ -146,12 +146,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Scaffold(
       body: Stack(
         children: [
-          // 애니메이션 배경
+          // 애니메이션 배경 - 파스텔 하늘색으로 변경
           AnimatedBackground(
             colors: const [
-              AppColors.background,
-              AppColors.darkBlue,
-              AppColors.background,
+              Color(0xFFB5E8FF),  // 밝은 하늘색
+              Color(0xFFD4F1FF),  // 매우 연한 하늘색
+              Color(0xFFE8F8FF),  // 거의 흰색에 가까운 연한 하늘색
             ],
           ),
           
@@ -193,15 +193,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 10),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withOpacity(0.4),  // 더 밝은 배경으로 변경
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withOpacity(0.2),
                         width: 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.white.withOpacity(0.4),  // 그림자도 밝게 변경
                           blurRadius: 10,
                           spreadRadius: 0,
                         ),
@@ -221,20 +221,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              AppAssets.welcomeCharacter,
-                              fit: BoxFit.cover,
-                              // 이미지가 없는 경우 아이콘으로 대체
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.face,
-                                  color: Colors.white,
-                                  size: 30,
-                                );
-                              },
-                            ),
+                          child: const Icon(
+                            Icons.face,
+                            color: Colors.white,
+                            size: 30,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -248,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                  color: Color(0xFF505050),  // 어두운 텍스트 색상
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -256,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 "오늘은 어떤 음성 경험을 원하세요?",
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.black.withOpacity(0.6),  // 어두운 텍스트 색상
                                 ),
                               ),
                             ],
@@ -267,17 +257,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           width: 42,
                           height: 42,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
+                            color: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Center(
+                              child: const Center(
                                 child: Icon(
                                   Icons.settings,
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Color(0xFF505050),  // 어두운 아이콘 색상
                                   size: 20,
                                 ),
                               ),
@@ -308,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Color(0xFF505050),  // 어두운 텍스트 색상
                           letterSpacing: 0.5,
                           fontFamily: 'GmarketSans',
                         ),

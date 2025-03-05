@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
 import '../utils/audio_manager.dart';
@@ -142,7 +141,7 @@ class _ExperienceDetailScreenState extends State<ExperienceDetailScreen> with Si
                   // 상단 공간 (앱바 아래)
                   const SizedBox(height: 40),
                   
-                  // 큰 아이콘 표시 (로티 애니메이션)
+                  // 큰 아이콘 표시 (Lottie 대신 기본 아이콘 사용)
                   Hero(
                     tag: "hero_${widget.card.title}",
                     child: AnimatedContainer(
@@ -178,20 +177,10 @@ class _ExperienceDetailScreenState extends State<ExperienceDetailScreen> with Si
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: Lottie.asset(
-                              widget.card.animationAsset,
-                              fit: BoxFit.cover,
-                              frameBuilder: (context, child, composition) {
-                                // 로티 에셋이 없는 경우, 기본 아이콘 표시
-                                return child ?? Icon(
-                                  widget.card.icon,
-                                  size: 100,
-                                  color: Colors.white,
-                                );
-                              },
-                            ),
+                          child: Icon(
+                            widget.card.icon,
+                            size: 100,
+                            color: Colors.white,
                           ),
                         ),
                       ),

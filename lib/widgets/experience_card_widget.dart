@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'dart:ui';
 
 import '../models/experience_card.dart';
@@ -118,7 +117,7 @@ class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with Single
                               padding: const EdgeInsets.all(20),
                               child: Row(
                                 children: [
-                                  // 아이콘 컨테이너
+                                  // 아이콘 컨테이너 - Lottie 애니메이션 대신 기본 아이콘 사용
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
                                     width: 60,
@@ -128,20 +127,11 @@ class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with Single
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Center(
-                                      child: SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: Lottie.asset(
-                                          widget.card.animationAsset,
-                                          frameBuilder: (context, child, composition) {
-                                            // 로티 에셋이 없는 경우, 기본 아이콘 표시
-                                            return child ?? Icon(
-                                              widget.card.icon,
-                                              size: 30,
-                                              color: Colors.white,
-                                            );
-                                          },
-                                        ),
+                                      // 기본 아이콘 사용
+                                      child: Icon(
+                                        widget.card.icon,
+                                        size: 32,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
