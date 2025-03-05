@@ -1,135 +1,189 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:simple_animations/simple_animations.dart';
 
-import '../utils/constants.dart';
-import '../models/experience_card.dart';
-
-class AnimatedBackground extends StatefulWidget {
+class AnimatedBackground extends StatelessWidget {
+  final Widget child;
   final List<Color> colors;
-  final bool enableStars;
-  
+  final bool showStars;
+
   const AnimatedBackground({
     Key? key,
+    required this.child,
     this.colors = const [
-      AppColors.pastelPurple,
-      AppColors.pastelBlue,
-      AppColors.pastelPink,
+      Color(0xFFFFC0CB), // 파스텔 핑크
+      Color(0xFFD8BFD8), // 파스텔 퍼플
+      Color(0xFFADD8E6), // 파스텔 블루
     ],
-    this.enableStars = true,
+    this.showStars = true,
   }) : super(key: key);
-  
-  @override
-  State<AnimatedBackground> createState() => _AnimatedBackgroundState();
-}
 
-class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 20),
-    )..repeat();
-  }
-  
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 그라데이션 배경 애니메이션
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment(
-                    math.cos(_controller.value * 2 * math.pi) * 0.2,
-                    math.sin(_controller.value * 2 * math.pi) * 0.2,
-                  ),
-                  end: Alignment(
-                    math.cos(_controller.value * 2 * math.pi + math.pi) * 0.2,
-                    math.sin(_controller.value * 2 * math.pi + math.pi) * 0.2,
-                  ),
-                  colors: widget.colors,
-                  stops: const [0.0, 0.5, 1.0],
-                ),
-              ),
-            );
-          },
+        // 그라데이션 배경
+        Positioned.fill(
+          child: AnimatedGradientBackground(colors: colors),
         ),
         
-        // 별 애니메이션
-        if (widget.enableStars)
-          const StarfieldAnimation(),
+        // 별 효과
+        if (showStars) 
+          Positioned.fill(
+            child: StarfieldAnimation(
+              starsCount: 100,
+              maxStarSize: 2.0,
+            ),
+          ),
+        
+        // 메인 콘텐츠
+        Positioned.fill(child: child),
       ],
     );
   }
 }
 
+class AnimatedGradientBackground extends StatelessWidget {
+  final List<Color> colors;
+
+  const AnimatedGradientBackground({
+    Key? key,
+    required this.colors,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MirrorAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 2 * math.pi),
+      duration: const Duration(seconds: 20),
+      curve: Curves.linear,
+      builder: (context, value, child) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment(
+                math.cos(value) * 0.2, 
+                math.sin(value) * 0.2
+              ),
+              end: Alignment(
+                math.cos(value + math.pi) * 0.2, 
+                math.sin(value + math.pi) * 0.2
+              ),
+              colors: colors,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class StarfieldAnimation extends StatefulWidget {
-  const StarfieldAnimation({Key? key}) : super(key: key);
+  final int starsCount;
+  final double maxStarSize;
+
+  const StarfieldAnimation({
+    Key? key,
+    this.starsCount = 100,
+    this.maxStarSize = 3.0,
+  }) : super(key: key);
 
   @override
   State<StarfieldAnimation> createState() => _StarfieldAnimationState();
 }
 
 class _StarfieldAnimationState extends State<StarfieldAnimation> with SingleTickerProviderStateMixin {
+  late List<Star> stars;
   late AnimationController _controller;
-  final List<Star> _stars = [];
-  final math.Random _random = math.Random();
-  
+
   @override
   void initState() {
     super.initState();
     
     // 별 생성
-    for (int i = 0; i < 100; i++) {
-      _stars.add(Star(
-        x: _random.nextDouble(),
-        y: _random.nextDouble(),
-        size: _random.nextDouble() * 2 + 0.5,
-        brightness: _random.nextDouble() * 0.6 + 0.4,
-        speed: _random.nextDouble() * 0.005 + 0.001,
-        offset: _random.nextDouble(),
-      ));
-    }
+    stars = List.generate(widget.starsCount, (_) => _createRandomStar());
     
     // 애니메이션 컨트롤러
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 1),
     )..repeat();
     
     // 별 애니메이션 업데이트
     _controller.addListener(() {
-      for (var star in _stars) {
-        star.update();
+      for (var star in stars) {
+        star.twinkle();
       }
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
   
+  Star _createRandomStar() {
+    final random = math.Random();
+    return Star(
+      x: random.nextDouble(),
+      y: random.nextDouble(),
+      size: random.nextDouble() * widget.maxStarSize,
+      twinkleSpeed: random.nextDouble() * 0.05 + 0.01,
+      twinkleFactor: random.nextDouble() * 0.6 + 0.4,
+    );
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: StarfieldPainter(stars: _stars),
+      painter: StarfieldPainter(stars: stars),
       size: Size.infinite,
     );
+  }
+}
+
+class Star {
+  final double x;
+  final double y;
+  final double size;
+  final double twinkleSpeed;
+  final double twinkleFactor;
+  
+  double opacity = 0.0;
+  double _progress = 0.0;
+  bool _increasing = true;
+  
+  Star({
+    required this.x,
+    required this.y,
+    required this.size,
+    required this.twinkleSpeed,
+    required this.twinkleFactor,
+  }) {
+    // 초기 불투명도 랜덤 설정
+    opacity = math.Random().nextDouble() * 0.5 + 0.1;
+  }
+  
+  void twinkle() {
+    // 반짝임 효과 진행
+    if (_increasing) {
+      _progress += twinkleSpeed;
+      if (_progress >= 1.0) {
+        _progress = 1.0;
+        _increasing = false;
+      }
+    } else {
+      _progress -= twinkleSpeed;
+      if (_progress <= 0.0) {
+        _progress = 0.0;
+        _increasing = true;
+      }
+    }
+    
+    // 불투명도 업데이트
+    opacity = 0.1 + _progress * twinkleFactor;
   }
 }
 
@@ -142,29 +196,27 @@ class StarfieldPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (var star in stars) {
       final paint = Paint()
-        ..color = Colors.white.withOpacity(0.2 + star.brightness * 0.8)
+        ..color = Colors.white.withOpacity(star.opacity)
         ..style = PaintingStyle.fill;
       
-      // 별 그리기 - 크기와 밝기가 시간에 따라 변화
-      final y = (star.y + star.offset) % 1.0 * size.height;
-      
+      // 별 그리기
       canvas.drawCircle(
-        Offset(star.x * size.width, y),
-        star.size * (0.8 + star.brightness * 0.4),
+        Offset(star.x * size.width, star.y * size.height),
+        star.size,
         paint,
       );
       
-      // 별 주변 글로우 효과
+      // 별 글로우 효과
       canvas.drawCircle(
-        Offset(star.x * size.width, y),
-        star.size * 2.5,
+        Offset(star.x * size.width, star.y * size.height),
+        star.size * 2,
         Paint()
-          ..color = Colors.white.withOpacity(0.05 + star.brightness * 0.1)
+          ..color = Colors.white.withOpacity(star.opacity * 0.3)
           ..style = PaintingStyle.fill,
       );
     }
   }
   
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant StarfieldPainter oldDelegate) => true;
 }

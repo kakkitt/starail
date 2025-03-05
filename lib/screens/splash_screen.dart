@@ -103,6 +103,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               AppColors.pastelBlue,
               AppColors.pastelPink,
             ],
+            child: Container(),
           ),
           
           // 원형 그라데이션 효과

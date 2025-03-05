@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:math' as math;
 
-import '../utils/audio_manager.dart';
-import '../utils/constants.dart';
-import '../models/experience_card.dart';
 import '../widgets/animated_background.dart';
-import '../widgets/experience_card_widget.dart';
-import '../widgets/voice_command_sheet.dart';
-import 'experience_detail_screen.dart';
+import 'romance_simulation/romance_main_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,28 +20,26 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     ExperienceCard(
       title: "AI 전화",
       description: "현실같은 AI와의 자연스러운 대화",
-      icon: Icons.phone_rounded,  // 더 귀여운 아이콘으로 변경
-      color: AppColors.primary,
+      icon: Icons.phone_rounded,
+      color: const Color(0xFF6E44FF),
       highlightColor: const Color(0xFF9E80FF),
       gradient: const LinearGradient(
-        colors: [AppColors.primary, Color(0xFF9C6FFF)],
+        colors: [Color(0xFF6E44FF), Color(0xFF9C6FFF)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      animationAsset: AppAssets.phoneAnimation,
     ),
     ExperienceCard(
       title: "음성 롤플레이",
       description: "중세 기사단 면접, 마법학교 입학시험 등",
-      icon: Icons.psychology,  // 더 귀여운 아이콘으로 변경
-      color: AppColors.secondary,
+      icon: Icons.psychology,
+      color: const Color(0xFF00E1FF),
       highlightColor: const Color(0xFF5EEDFF),
       gradient: const LinearGradient(
-        colors: [Color(0xFF00A3FF), AppColors.secondary],
+        colors: [Color(0xFF00A3FF), Color(0xFF00E1FF)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      animationAsset: AppAssets.knightAnimation,
     ),
     ExperienceCard(
       title: "AI 라디오",
@@ -59,33 +52,30 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      animationAsset: AppAssets.radioAnimation,
     ),
     ExperienceCard(
       title: "음성 RPG",
       description: "목소리로 즐기는 몰입형 어드벤처",
-      icon: Icons.sports_esports, 
-      color: AppColors.quaternary,
+      icon: Icons.sports_esports,
+      color: const Color(0xFFFFB443),
       highlightColor: const Color(0xFFFFCF85),
       gradient: const LinearGradient(
-        colors: [Color(0xFFFF9620), AppColors.quaternary],
+        colors: [Color(0xFFFF9620), Color(0xFFFFB443)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      animationAsset: AppAssets.gameAnimation,
     ),
     ExperienceCard(
       title: "연애 시뮬레이션",
       description: "감성적인 대화로 발전하는 관계",
       icon: Icons.favorite,
-      color: AppColors.tertiary,
+      color: const Color(0xFFFF44A1),
       highlightColor: const Color(0xFFFF7BBA),
       gradient: const LinearGradient(
-        colors: [AppColors.tertiary, Color(0xFFFF7BBA)],
+        colors: [Color(0xFFFF44A1), Color(0xFFFF7BBA)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      animationAsset: AppAssets.heartAnimation,
     ),
   ];
   
@@ -113,30 +103,32 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.dispose();
   }
   
-  void _navigateToExperienceDetail(ExperienceCard card) {
-    AudioManager().playSFX('card_tap');
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 600),
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: animation,
-            child: ExperienceDetailScreen(card: card),
-          );
-        },
-      ),
-    );
-  }
-  
-  void _showVoiceCommandSheet() {
-    AudioManager().playSFX('button');
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => const VoiceCommandSheet(),
-    );
+  void _navigateToExperienceDetail(int index) {
+    if (index == 4) { // 연애 시뮬레이션 인덱스
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(
+              opacity: animation,
+              child: const RomanceMainScreen(),
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 800),
+        ),
+      );
+    } else {
+      // 다른 메뉴 카드 처리
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("${_experienceCards[index].title} 준비 중입니다."),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      );
+    }
   }
   
   @override
@@ -146,38 +138,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Scaffold(
       body: Stack(
         children: [
-          // 애니메이션 배경 - 파스텔 하늘색으로 변경
+          // 애니메이션 배경
           AnimatedBackground(
             colors: const [
               Color(0xFFB5E8FF),  // 밝은 하늘색
               Color(0xFFD4F1FF),  // 매우 연한 하늘색
               Color(0xFFE8F8FF),  // 거의 흰색에 가까운 연한 하늘색
             ],
-          ),
-          
-          // 움직이는 그라데이션 원 (추가 시각 효과)
-          Positioned(
-            top: -size.width * 0.5,
-            right: -size.width * 0.5,
-            child: AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return Container(
-                  width: size.width,
-                  height: size.width,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        AppColors.primary.withOpacity(0.2),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.2, 1.0],
-                    ),
-                  ),
-                );
-              },
-            ),
+            child: Container(), // 빈 컨테이너
           ),
           
           // 메인 내용
@@ -215,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           height: 50,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.tertiary],
+                              colors: [Color(0xFF6E44FF), Color(0xFFFF44A1)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
@@ -314,11 +282,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: _experienceCards.length,
                     itemBuilder: (context, index) {
-                      return ExperienceCardWidget(
-                        card: _experienceCards[index],
-                        onTap: () => _navigateToExperienceDetail(_experienceCards[index]),
-                        isVisible: _isLoaded,
-                        index: index,
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutQuint,
+                        transform: Matrix4.translationValues(
+                          0, 
+                          _isLoaded ? 0 : 100 + (index * 20), 
+                          0,
+                        ),
+                        child: AnimatedOpacity(
+                          opacity: _isLoaded ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 800),
+                          child: ExperienceCardWidget(
+                            experienceCard: _experienceCards[index],
+                            onTap: () => _navigateToExperienceDetail(index),
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -340,20 +319,30 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       alignment: Alignment.center,
                       padding: const EdgeInsets.only(bottom: 24),
                       child: GestureDetector(
-                        onTap: _showVoiceCommandSheet,
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text("음성 인식 준비중입니다."),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          );
+                        },
                         child: Container(
                           width: 70,
                           height: 70,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.tertiary],
+                              colors: [Color(0xFF6E44FF), Color(0xFFFF44A1)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.circular(35),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.5),
+                                color: const Color(0xFF6E44FF).withOpacity(0.5),
                                 blurRadius: 15,
                                 spreadRadius: 5,
                                 offset: const Offset(0, 5),
@@ -374,6 +363,186 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// 경험 카드 데이터 모델
+class ExperienceCard {
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+  final Color highlightColor;
+  final Gradient gradient;
+  
+  ExperienceCard({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+    required this.highlightColor,
+    required this.gradient,
+  });
+}
+
+// 경험 카드 위젯
+class ExperienceCardWidget extends StatefulWidget {
+  final ExperienceCard experienceCard;
+  final VoidCallback onTap;
+  
+  const ExperienceCardWidget({
+    Key? key,
+    required this.experienceCard,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<ExperienceCardWidget> createState() => _ExperienceCardWidgetState();
+}
+
+class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _hoverController;
+  bool _isHovered = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+  
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    super.dispose();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _hoverController.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _hoverController.reverse();
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _hoverController,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(
+                5 * _hoverController.value,
+                0,
+              ),
+              child: Container(
+                height: 120,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  gradient: widget.experienceCard.gradient,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.experienceCard.color.withOpacity(0.3 + 0.2 * _hoverController.value),
+                      blurRadius: 15 + 5 * _hoverController.value,
+                      spreadRadius: 2 + 2 * _hoverController.value,
+                      offset: Offset(0, 5 - 2 * _hoverController.value),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Stack(
+                    children: [
+                      // 빛나는 강조 효과
+                      Positioned(
+                        top: -20,
+                        right: -20,
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: widget.experienceCard.highlightColor.withOpacity(0.3),
+                          ),
+                        ),
+                      ),
+                      
+                      // 카드 내용
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15 + 0.05 * _hoverController.value),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  widget.experienceCard.icon,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    widget.experienceCard.title,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    widget.experienceCard.description,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              transform: Matrix4.translationValues(
+                                10 * _hoverController.value,
+                                0,
+                                0,
+                              ),
+                              child: const Icon(
+                                Icons.chevron_right_rounded,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
