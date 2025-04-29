@@ -25,6 +25,9 @@ dependencies:
   # 유틸리티
   shared_preferences: ^2.2.0
 
+  # SupaBase DB
+  supabase_flutter: ^1.10.14
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

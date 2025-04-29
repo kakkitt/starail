@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   bool _isLoaded = false;
-  
+
   final List<ExperienceCard> _experienceCards = [
     ExperienceCard(
       title: "AI 전화",
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
     ),
   ];
-  
+
   @override
   void initState() {
     super.initState();
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       vsync: this,
       duration: const Duration(seconds: 30),
     )..repeat();
-    
+
     // 홈 화면 로딩 효과
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
@@ -96,13 +96,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       }
     });
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
+
   void _navigateToExperienceDetail(int index) {
     if (index == 4) { // 연애 시뮬레이션 인덱스
       Navigator.push(
@@ -130,24 +130,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     return Scaffold(
       body: Stack(
         children: [
-          // 애니메이션 배경
+          // 애니메이션 배경 (연두색 베이스 파스텔 톤)
           AnimatedBackground(
             colors: const [
-              Color(0xFFB5E8FF),  // 밝은 하늘색
-              Color(0xFFD4F1FF),  // 매우 연한 하늘색
-              Color(0xFFE8F8FF),  // 거의 흰색에 가까운 연한 하늘색
+              Color(0xFFA7F6B8),  // 파스텔 연두
+              Color(0xFFDFFFD6),  // 좀 더 밝은 연두
+              Color(0xFFF1FFE7),  // 거의 흰색에 가까운 밝은 연두
             ],
-            child: Container(), // 빈 컨테이너
+            child: Container(),
           ),
-          
+
           // 메인 내용
           SafeArea(
             child: Column(
@@ -161,7 +161,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 10),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),  // 더 밝은 배경으로 변경
+                      // 조금 더 설레는 느낌의 은은한 핑크 배경
+                      color: const Color(0xFFFFECF3).withOpacity(0.6),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.2),
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.4),  // 그림자도 밝게 변경
+                          color: Colors.white.withOpacity(0.4),
                           blurRadius: 10,
                           spreadRadius: 0,
                         ),
@@ -196,25 +197,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           ),
                         ),
                         const SizedBox(width: 16),
-                        // 환영 텍스트
+                        // 환영 텍스트 (요청하신 문구 + 느낌)
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "안녕하세요!",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF505050),  // 어두운 텍스트 색상
-                                ),
-                              ),
-                              const SizedBox(height: 4),
+                            children: const [
                               Text(
-                                "오늘은 어떤 음성 경험을 원하세요?",
+                                "당신의 목소리를 기다리고 있었어요!",
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black.withOpacity(0.6),  // 어두운 텍스트 색상
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  // 설레는 느낌의 핑크 컬러
+                                  color: Color(0xFFFF69B4),
                                 ),
                               ),
                             ],
@@ -235,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               child: const Center(
                                 child: Icon(
                                   Icons.settings,
-                                  color: Color(0xFF505050),  // 어두운 아이콘 색상
+                                  color: Color(0xFF505050),
                                   size: 20,
                                 ),
                               ),
@@ -246,14 +240,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                   ),
                 ),
-                
-                // 메인 타이틀
+
+                // 메인 타이틀 (요청하신 문구 "내 목소리로 시작되는 설렘")
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 800),
                   curve: Curves.easeOutQuint,
                   transform: Matrix4.translationValues(
-                    0, 
-                    _isLoaded ? 0 : 50, 
+                    0,
+                    _isLoaded ? 0 : 50,
                     0,
                   ),
                   child: AnimatedOpacity(
@@ -262,11 +256,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     child: const Padding(
                       padding: EdgeInsets.fromLTRB(25, 25, 25, 15),
                       child: Text(
-                        "나만의 음성 경험",
+                        "내 목소리로 시작되는 설렘",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF505050),  // 어두운 텍스트 색상
+                          // 예쁘고 감각적인 핑크 톤
+                          color: Color(0xFFFF69B4),
                           letterSpacing: 0.5,
                           fontFamily: 'GmarketSans',
                         ),
@@ -274,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                   ),
                 ),
-                
+
                 // 경험 카드 리스트
                 Expanded(
                   child: ListView.builder(
@@ -286,8 +281,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         duration: const Duration(milliseconds: 800),
                         curve: Curves.easeOutQuint,
                         transform: Matrix4.translationValues(
-                          0, 
-                          _isLoaded ? 0 : 100 + (index * 20), 
+                          0,
+                          _isLoaded ? 0 : 100 + (index * 20),
                           0,
                         ),
                         child: AnimatedOpacity(
@@ -302,14 +297,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     },
                   ),
                 ),
-                
+
                 // 하단 마이크 버튼
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 1000),
                   curve: Curves.elasticOut,
                   transform: Matrix4.translationValues(
-                    0, 
-                    _isLoaded ? 0 : 100, 
+                    0,
+                    _isLoaded ? 0 : 100,
                     0,
                   ),
                   child: AnimatedOpacity(
@@ -376,7 +371,7 @@ class ExperienceCard {
   final Color color;
   final Color highlightColor;
   final Gradient gradient;
-  
+
   ExperienceCard({
     required this.title,
     required this.description,
@@ -391,7 +386,7 @@ class ExperienceCard {
 class ExperienceCardWidget extends StatefulWidget {
   final ExperienceCard experienceCard;
   final VoidCallback onTap;
-  
+
   const ExperienceCardWidget({
     Key? key,
     required this.experienceCard,
@@ -405,7 +400,7 @@ class ExperienceCardWidget extends StatefulWidget {
 class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with SingleTickerProviderStateMixin {
   late AnimationController _hoverController;
   bool _isHovered = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -414,13 +409,13 @@ class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with Single
       duration: const Duration(milliseconds: 300),
     );
   }
-  
+
   @override
   void dispose() {
     _hoverController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -474,7 +469,7 @@ class _ExperienceCardWidgetState extends State<ExperienceCardWidget> with Single
                           ),
                         ),
                       ),
-                      
+
                       // 카드 내용
                       Padding(
                         padding: const EdgeInsets.all(20),
