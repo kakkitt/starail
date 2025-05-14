@@ -1,49 +1,38 @@
-// main.dart 파일 수정
+// lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:video_player/video_player.dart'; // 추가된 패키지
-import 'package:flutter_svg/flutter_svg.dart'; // 추가된 패키지
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'screens/splash_screen.dart';
-import 'utils/constants.dart';
+import 'package:flutter/gestures.dart'; // ScrollBehavior를 위해 추가
+import 'package:ai_voice_dev/screens/splash_screen.dart';
+import 'package:ai_voice_dev/theme/app_theme.dart';
 
-// Supabase 클라이언트 전역 인스턴스
-final supabase = Supabase.instance.client;
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // SystemChrome 설정
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-  ));
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-  
-  // Supabase 초기화
-  await Supabase.initialize(
-    url: 'https://your-project-url.supabase.co', // Supabase 프로젝트 URL로 변경
-    anonKey: 'your-anon-key', // Supabase 프로젝트의 anon key로 변경
-  );
-  
-  runApp(const AIPhoneApp());
+// 모든 포인터 장치에서 드래그 스크롤을 지원하는 ScrollBehavior 클래스
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.invertedStylus,
+        PointerDeviceKind.unknown, // 필요한 경우 추가
+      };
 }
 
-class AIPhoneApp extends StatelessWidget {
-  const AIPhoneApp({Key? key}) : super(key: key);
+void main() {
+  runApp(const LuminaApp());
+}
+
+class LuminaApp extends StatelessWidget {
+  const LuminaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'LUMINA',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Pretendard',
-      ),
+      scrollBehavior: MyCustomScrollBehavior(), // 이 부분 추가
       home: const SplashScreen(),
     );
   }
