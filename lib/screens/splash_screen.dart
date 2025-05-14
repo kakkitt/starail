@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'dart:math' as math;
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../utils/audio_manager.dart';
-import '../utils/constants.dart';
-import '../widgets/animated_background.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,12 +12,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
-  late AnimationController _logoAnimationController;
-  late AnimationController _pulseAnimationController;
-  late Animation<double> _pulseAnimation;
-  bool _showLogo = false;
+  late AnimationController _heartRiseController;
+  late AnimationController _textAnimationController;
+  late Animation<double> _heartRiseAnimation;
+  late Animation<double> _textFadeAnimation;
+  
   bool _showText = false;
-  bool _showWelcome = false;
+  bool _showHeart = false;
   
   @override
   void initState() {
@@ -29,20 +27,24 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     // 오디오 플레이어 초기화
     AudioManager().playBGM();
     
-    // 로고 애니메이션 컨트롤러
-    _logoAnimationController = AnimationController(
-      vsync: this, 
-      duration: const Duration(seconds: 2),
+    // 텍스트 페이드인 애니메이션
+    _textAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
     );
     
-    // 펄스 애니메이션 컨트롤러
-    _pulseAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
+    _textFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _textAnimationController, curve: Curves.easeOut),
+    );
     
-    _pulseAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
-      CurvedAnimation(parent: _pulseAnimationController, curve: Curves.easeInOut),
+    // 하트 상승 애니메이션
+    _heartRiseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    
+    _heartRiseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _heartRiseController, curve: Curves.easeOutCubic),
     );
     
     // 스플래시 시퀀스 시작
@@ -50,27 +52,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
   
   Future<void> _startSplashSequence() async {
-    // 지연 시간 후 로고 표시
-    await Future.delayed(const Duration(milliseconds: 500));
-    setState(() => _showLogo = true);
-    
-    // 로고 애니메이션 시작
-    _logoAnimationController.forward();
-    
-    // 추가 지연 후 텍스트 표시
-    await Future.delayed(const Duration(milliseconds: 800));
+    // 텍스트 먼저 표시
+    await Future.delayed(const Duration(milliseconds: 300));
     setState(() => _showText = true);
+    _textAnimationController.forward();
     
-    // 환영 메시지 표시
-    await Future.delayed(const Duration(milliseconds: 1200));
-    setState(() => _showWelcome = true);
+    // 텍스트 애니메이션 후 하트 표시
+    await Future.delayed(const Duration(milliseconds: 800));
+    setState(() => _showHeart = true);
+    _heartRiseController.forward();
     
     // 애니메이션 완료 후 메인 화면으로 이동
     await Future.delayed(const Duration(milliseconds: 2500));
     if (mounted) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 1500),
+          transitionDuration: const Duration(milliseconds: 1200),
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: animation,
@@ -84,9 +81,66 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   
   @override
   void dispose() {
-    _logoAnimationController.dispose();
-    _pulseAnimationController.dispose();
+    _heartRiseController.dispose();
+    _textAnimationController.dispose();
     super.dispose();
+  }
+
+  // SVG 문자열을 직접 사용하는 메서드
+  Widget _buildHeartSvg() {
+    // 제공된 SVG 코드를 사용
+    String svgCode = '''
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="heartGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#FF3F7F"/>
+          <stop offset="100%" stop-color="#FFB3C9"/>
+        </linearGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+
+      <g opacity="0.1">
+        <path d="M0 0 L400 0 L400 400 L0 400 Z" fill="#f9f9f9"/>
+        <g stroke="#ccc" stroke-width="0.5">
+          <path d="M25 0 L25 400"/><path d="M50 0 L50 400"/><path d="M75 0 L75 400"/>
+          <path d="M100 0 L100 400"/><path d="M125 0 L125 400"/><path d="M150 0 L150 400"/>
+          <path d="M175 0 L175 400"/><path d="M200 0 L200 400"/><path d="M225 0 L225 400"/>
+          <path d="M250 0 L250 400"/><path d="M275 0 L275 400"/><path d="M300 0 L300 400"/>
+          <path d="M325 0 L325 400"/><path d="M350 0 L350 400"/><path d="M375 0 L375 400"/>
+        </g>
+        <g stroke="#ccc" stroke-width="0.5">
+          <path d="M0 25 L400 25"/><path d="M0 50 L400 50"/><path d="M0 75 L400 75"/>
+          <path d="M0 100 L400 100"/><path d="M0 125 L400 125"/><path d="M0 150 L400 150"/>
+          <path d="M0 175 L400 175"/><path d="M0 200 L400 200"/><path d="M0 225 L400 225"/>
+          <path d="M0 250 L400 250"/><path d="M0 275 L400 275"/><path d="M0 300 L400 300"/>
+          <path d="M0 325 L400 325"/><path d="M0 350 L400 350"/><path d="M0 375 L400 375"/>
+        </g>
+      </g>
+
+      <g transform="translate(200, 165) scale(0.9)">
+        <path
+          d="M0 30
+             C-40 -25, -80 0, -80 30
+             C-80 60, -40 85, 0 100
+             C40 85, 80 60, 80 30
+             C80 0, 40 -25, 0 30"
+          fill="url(#heartGradient)"
+          filter="url(#glow)"
+        />
+        <circle cx="-60" cy="-25" r="15" fill="#FFB3C9" opacity="0.9"/>
+        <circle cx="60"  cy="-25" r="12" fill="#FFB3C9" opacity="0.9"/>
+      </g>
+    </svg>
+    ''';
+    
+    return SvgPicture.string(
+      svgCode,
+      width: 230,
+      height: 230,
+    );
   }
   
   @override
@@ -94,80 +148,41 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     final size = MediaQuery.of(context).size;
     
     return Scaffold(
+      // 순수한 흰색 배경
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // 애니메이션 배경
-          AnimatedBackground(
-            colors: const [
-              AppColors.pastelPurple,
-              AppColors.pastelBlue,
-              AppColors.pastelPink,
-            ],
-            child: Container(),
-          ),
-          
-          // 원형 그라데이션 효과
-          Center(
-            child: Container(
-              width: size.width * 0.8,
-              height: size.width * 0.8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    AppColors.primary.withOpacity(0.3),
-                    AppColors.primary.withOpacity(0),
-                  ],
-                  stops: const [0.2, 1.0],
-                ),
-              ),
-            ),
-          ),
-          
-          // 로고 애니메이션
-          Center(
+          // LUMINA 텍스트 애니메이션 (먼저 나타남)
+          Positioned(
+            bottom: size.height * 0.28,
+            left: 0,
+            right: 0,
             child: AnimatedOpacity(
-              opacity: _showLogo ? 1.0 : 0.0,
+              opacity: _showText ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 800),
               curve: Curves.easeOut,
               child: AnimatedBuilder(
-                animation: _logoAnimationController,
+                animation: _textFadeAnimation,
                 builder: (context, child) {
-                  return Transform.scale(
-                    scale: Curves.elasticOut.transform(_logoAnimationController.value),
-                    child: AnimatedBuilder(
-                      animation: _pulseAnimation,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _pulseAnimation.value,
-                          child: Container(
-                            width: 150,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withOpacity(0.05),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withOpacity(0.5),
-                                  blurRadius: 30,
-                                  spreadRadius: 10,
-                                ),
-                              ],
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.mic,
-                                size: 70,
-                                color: Colors.white.withOpacity(0.95),
-                              ),
-                            ),
+                  return Transform.translate(
+                    offset: Offset(0, 20 * (1 - _textFadeAnimation.value)),
+                    child: const Text(
+                      "LUMINA",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Nova Round',
+                        fontSize: 42,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 5,
+                        color: Color(0xFFFF3F7F),
+                        shadows: [
+                          Shadow(
+                            color: Color(0xFFFF3F7F),
+                            blurRadius: 10,
+                            offset: Offset(0, 0),
                           ),
-                        );
-                      }
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -175,111 +190,66 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             ),
           ),
           
-          // 앱 타이틀 텍스트
+          // 부가 설명 텍스트
           Positioned(
-            bottom: size.height * 0.35,
+            bottom: size.height * 0.22,
             left: 0,
             right: 0,
             child: AnimatedOpacity(
               opacity: _showText ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 800),
+              duration: const Duration(milliseconds: 1000),
               curve: Curves.easeOut,
-              child: Column(
-                children: [
-                  const Text(
-                    AppStrings.appName,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 3,
-                      fontFamily: 'GmarketSans',
+              child: AnimatedBuilder(
+                animation: _textFadeAnimation,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 15 * (1 - _textFadeAnimation.value)),
+                    child: const Text(
+                      "당신의 마음을 연결합니다",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Pretendard',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 1,
+                        color: Color(0xFFFF3F7F),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    AppStrings.appTagline,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white.withOpacity(0.7),
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ),
           
-          // 환영 메시지와 캐릭터
-          Positioned(
-            bottom: size.height * 0.15,
-            left: 0,
-            right: 0,
+          // 하트 로고 (상승 애니메이션)
+          Center(
             child: AnimatedOpacity(
-              opacity: _showWelcome ? 1.0 : 0.0,
+              opacity: _showHeart ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 800),
               curve: Curves.easeOut,
-              child: Column(
-                children: [
-                  // 캐릭터 애니메이션
-                  SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: Lottie.asset(
-                      AppAssets.welcomeCharacter,
-                      // 로티 파일이 없는 경우 아래 코드 주석 해제하고 사용
-                      /*
-                      frameBuilder: (context, child, composition) {
-                        // 로티 에셋 없을 때 대체
-                        return Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: AppColors.pastelPurple.withOpacity(0.5),
-                            shape: BoxShape.circle,
+              child: AnimatedBuilder(
+                animation: _heartRiseAnimation,
+                builder: (context, child) {
+                  // 아래에서 위로 상승하는 애니메이션
+                  return Transform.translate(
+                    offset: Offset(0, 100 * (1 - _heartRiseAnimation.value)),
+                    child: Container(
+                      width: 250,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF3F7F).withOpacity(0.2),
+                            blurRadius: 20,
+                            spreadRadius: 2,
                           ),
-                          child: const Icon(
-                            Icons.face,
-                            size: 50,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                      */
+                        ],
+                      ),
+                      child: _buildHeartSvg(),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  // 환영 메시지
-                  Text(
-                    AppStrings.welcomeMessage('사용자'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          // 로딩 인디케이터
-          Positioned(
-            bottom: 60,
-            left: 0,
-            right: 0,
-            child: AnimatedOpacity(
-              opacity: _showText ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 800),
-              child: Center(
-                child: SizedBox(
-                  width: 160,
-                  child: LinearProgressIndicator(
-                    backgroundColor: Colors.white.withOpacity(0.1),
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondary.withOpacity(0.8)),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ),

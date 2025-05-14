@@ -1,5 +1,8 @@
+// main.dart 파일 수정
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart'; // 추가된 패키지
+import 'package:flutter_svg/flutter_svg.dart'; // 추가된 패키지
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/splash_screen.dart';
 import 'utils/constants.dart';
@@ -34,9 +37,13 @@ class AIPhoneApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AI 전화',
+      title: 'LUMINA',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.themeData,
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'Pretendard',
+      ),
       home: const SplashScreen(),
     );
   }
