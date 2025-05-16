@@ -52,16 +52,17 @@ class _CharacterFeedScreenState extends State<CharacterFeedScreen>
 
   // 임시 피드 데이터 (character_profile_screen.dart 와 동일한 구조)
   // 실제로는 widget.character.id 등을 이용해 해당 캐릭터의 피드 데이터를 가져와야 합니다.
+  // C:\Users\PC\\Starail\ai_voice_dev\assets\images\nayeon\character1_feed_1.png
   final List<FeedItem> _feedItems = [
-    FeedItem(id: 'feed1', imageAssetPath: 'assets/images/character1_feed_1.png', caption: "오늘 날씨 최고! ☀️ #산책 #기분좋아", likeCount: 123, timestamp: DateTime.now().subtract(const Duration(hours: 2))),
-    FeedItem(id: 'feed2', imageAssetPath: 'assets/images/character1_feed_2.png', caption: "새로 산 옷 어떤가요? 😉 #데일리룩 #OOTD", likeCount: 256, timestamp: DateTime.now().subtract(const Duration(hours: 5))),
-    FeedItem(id: 'feed3', imageAssetPath: 'assets/images/character1_feed_3.png', caption: "퇴근 후엔 역시 맛있는 거지! 🍕 #저녁메뉴 #행복", likeCount: 189, timestamp: DateTime.now().subtract(const Duration(days: 1))),
-    FeedItem(id: 'feed4', imageAssetPath: 'assets/images/character1_feed_4.png', caption: "주말엔 역시 집에서 뒹굴뒹굴 뒹구르르...", likeCount: 301, timestamp: DateTime.now().subtract(const Duration(days: 2))),
-    FeedItem(id: 'feed5', imageAssetPath: 'assets/images/character1_feed_5.png', caption: "오랜만에 만난 친구랑 수다 삼매경! ☕️", likeCount: 220, timestamp: DateTime.now().subtract(const Duration(days: 3))),
-    FeedItem(id: 'feed6', imageAssetPath: 'assets/images/character1_feed_6.png', caption: "새로운 취미 발견! #베이킹 #꿀잼", likeCount: 175, timestamp: DateTime.now().subtract(const Duration(days: 4))),
-    FeedItem(id: 'feed7', imageAssetPath: 'assets/images/character1_feed_7.png', caption: "밤하늘이 너무 예뻐서 한 컷 🌙", likeCount: 190, timestamp: DateTime.now().subtract(const Duration(days: 5))),
-    FeedItem(id: 'feed8', imageAssetPath: 'assets/images/character1_feed_8.png', caption: "오늘의 플레이리스트 🎶", likeCount: 155, timestamp: DateTime.now().subtract(const Duration(days: 6))),
-    FeedItem(id: 'feed9', imageAssetPath: 'assets/images/character1_feed_9.png', caption: "독서의 계절, 마음의 양식 쌓기 📚", likeCount: 130, timestamp: DateTime.now().subtract(const Duration(days: 7))),
+    FeedItem(id: 'feed1', imageAssetPath: 'assets/images/nayeon/character1_feed_1.png', caption: "오늘 날씨 최고! ☀️ #산책 #기분좋아", likeCount: 123, timestamp: DateTime.now().subtract(const Duration(hours: 2))),
+    FeedItem(id: 'feed2', imageAssetPath: 'assets/images/nayeon/character1_feed_2.png', caption: "새로 산 옷 어떤가요? 😉 #데일리룩 #OOTD", likeCount: 256, timestamp: DateTime.now().subtract(const Duration(hours: 5))),
+    FeedItem(id: 'feed3', imageAssetPath: 'assets/images/nayeon/character1_feed_3.png', caption: "퇴근 후엔 역시 맛있는 거지! 🍕 #저녁메뉴 #행복", likeCount: 189, timestamp: DateTime.now().subtract(const Duration(days: 1))),
+    FeedItem(id: 'feed4', imageAssetPath: 'assets/images/nayeon/character1_feed_4.png', caption: "주말엔 역시 집에서 뒹굴뒹굴 뒹구르르...", likeCount: 301, timestamp: DateTime.now().subtract(const Duration(days: 2))),
+    FeedItem(id: 'feed5', imageAssetPath: 'assets/images/nayeon/character1_feed_5.png', caption: "오랜만에 만난 친구랑 수다 삼매경! ☕️", likeCount: 220, timestamp: DateTime.now().subtract(const Duration(days: 3))),
+    FeedItem(id: 'feed6', imageAssetPath: 'assets/images/nayeon/character1_feed_6.png', caption: "새로운 취미 발견! #베이킹 #꿀잼", likeCount: 175, timestamp: DateTime.now().subtract(const Duration(days: 4))),
+    FeedItem(id: 'feed7', imageAssetPath: 'assets/images/nayeon/character1_feed_7.png', caption: "밤하늘이 너무 예뻐서 한 컷 🌙", likeCount: 190, timestamp: DateTime.now().subtract(const Duration(days: 5))),
+    FeedItem(id: 'feed8', imageAssetPath: 'assets/images/nayeon/character1_feed_8.png', caption: "오늘의 플레이리스트 🎶", likeCount: 155, timestamp: DateTime.now().subtract(const Duration(days: 6))),
+    FeedItem(id: 'feed9', imageAssetPath: 'assets/images/nayeon/character1_feed_9.png', caption: "독서의 계절, 마음의 양식 쌓기 📚", likeCount: 130, timestamp: DateTime.now().subtract(const Duration(days: 7))),
   ];
 
   // 캐릭터 정보 (실제로는 widget.character에서 가져옴)

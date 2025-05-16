@@ -4,11 +4,11 @@ import 'dart:ui'; // For ImageFilter.blur
 import 'package:ai_voice_dev/models/character_model.dart';
 import 'package:ai_voice_dev/theme/app_theme.dart';
 import 'package:ai_voice_dev/screens/character_feed_screen.dart'; // 새로 만들 피드 화면 import
-// import 'package:ai_voice_dev/screens/calling_screen.dart'; // 통화 화면 경로
+import 'package:ai_voice_dev/screens/calling_screen.dart'; // 통화 화면 경로
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:ai_voice_dev/screens/calling_screen.dart';
+
 
 class CharacterProfileScreen extends StatefulWidget {
   final Character character;
