@@ -3,9 +3,12 @@
 import 'dart:ui'; // For ImageFilter.blur
 import 'package:ai_voice_dev/models/character_model.dart';
 import 'package:ai_voice_dev/theme/app_theme.dart';
+import 'package:ai_voice_dev/screens/character_feed_screen.dart'; // 새로 만들 피드 화면 import
+// import 'package:ai_voice_dev/screens/calling_screen.dart'; // 통화 화면 경로
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For SystemUiOverlayStyle
-import 'package:ai_voice_dev/screens/calling_screen.dart'; // CallingScreen import
+import 'package:flutter/services.dart';
+
+import 'package:ai_voice_dev/screens/calling_screen.dart';
 
 class CharacterProfileScreen extends StatefulWidget {
   final Character character;
@@ -29,11 +32,10 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
   late Animation<Offset> _detailsContainerSlideAnimation;
   late Animation<double> _buttonsFadeAnimation;
 
-  // 예시 데이터 (실제로는 모델 또는 API에서 가져옴)
   final String mbti = "ENFP";
   final String hobby = "밤 산책, 인디 음악 감상, 길고양이랑 놀기";
   final String likes = "달콤한 마카롱, 뜻밖의 선물, 별 헤는 밤";
-  final int relationshipLevel = 3; // 1~5
+  final int relationshipLevel = 3;
   final String relationshipStatus = "두근두근 썸타는 중 💖";
 
   @override
@@ -50,7 +52,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
         curve: const Interval(0.3, 0.7, curve: Curves.easeOut),
       ),
     );
-
     _detailsContainerFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -64,14 +65,12 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
         curve: const Interval(0.35, 0.90, curve: Curves.easeOutQuint),
       ),
     );
-
     _buttonsFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(0.55, 1.0, curve: Curves.easeOutQuad),
       ),
     );
-
     _animationController.forward();
   }
 
@@ -83,29 +82,34 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
 
   void _startCall(BuildContext context) {
     print('Starting call with ${widget.character.name}');
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallingScreen(
-          character: widget.character,
-          isFriendMode: widget.isFriendMode,
-        ),
-      ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text('${widget.character.name}와(과) 통화 시작 (구현 예정)',
+              style: TextStyle(fontFamily: AppTheme.pretendardFontFamily))),
     );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CallingScreen(character: widget.character, isFriendMode: widget.isFriendMode)));
   }
 
   void _startSimulation(BuildContext context) {
     print('Starting simulation with ${widget.character.name}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text('${widget.character.name}와(과) 연애 시뮬레이션 시작 (구현 예정)',
+              style: TextStyle(fontFamily: AppTheme.pretendardFontFamily))),
+    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CallingScreen(character: widget.character, isFriendMode: false)));
+  }
+
+  // 피드 화면으로 이동하는 함수
+  void _navigateToFeedScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CallingScreen(
-          character: widget.character,
-          isFriendMode: false,
-        ),
+        builder: (context) => CharacterFeedScreen(character: widget.character),
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +124,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // 1. 배경 그라데이션
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -143,8 +146,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
               ),
             ),
           ),
-
-          // 2. 캐릭터 Hero 이미지
           Positioned(
             top: 0,
             left: 0,
@@ -177,8 +178,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
               ),
             ),
           ),
-
-          // 3. 세부 정보 컨테이너
           Positioned.fill(
             child: NotificationListener<OverscrollIndicatorNotification>(
               onNotification: (overscroll) {
@@ -202,8 +201,7 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(
-                                isDarkMode ? 0.35 : 0.12),
+                            color: Colors.black.withOpacity(isDarkMode ? 0.35 : 0.12),
                             blurRadius: 30,
                             spreadRadius: 2,
                             offset: const Offset(0, -15),
@@ -213,7 +211,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 이름 & 온라인 상태
                           FadeTransition(
                             opacity: _heroImageFadeAnimation,
                             child: Row(
@@ -222,44 +219,33 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                                 Expanded(
                                   child: Text(
                                     widget.character.name,
-                                    style: theme.textTheme.displaySmall
-                                        ?.copyWith(
-                                      fontFamily:
-                                          AppTheme.novaRoundFontFamily,
+                                    style: theme.textTheme.displaySmall?.copyWith(
+                                      fontFamily: AppTheme.novaRoundFontFamily,
                                       fontWeight: FontWeight.bold,
-                                      color:
-                                          theme.colorScheme.onBackground,
+                                      color: theme.colorScheme.onBackground,
                                       letterSpacing: -0.5,
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                   decoration: BoxDecoration(
-                                    color: Colors.greenAccent
-                                        .withOpacity(0.2),
+                                    color: Colors.greenAccent.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.circle,
-                                          color: Colors.greenAccent
-                                              .shade700,
-                                          size: 10),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        "온라인",
-                                        style: theme.textTheme.bodySmall
-                                            ?.copyWith(
-                                          color: Colors.greenAccent
-                                              .shade700,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: AppTheme
-                                              .pretendardFontFamily,
-                                        ),
-                                      )
+                                       Icon(Icons.circle, color: Colors.greenAccent.shade700, size: 10),
+                                       const SizedBox(width: 6),
+                                       Text(
+                                         "온라인",
+                                         style: theme.textTheme.bodySmall?.copyWith(
+                                           color: Colors.greenAccent.shade700,
+                                           fontWeight: FontWeight.bold,
+                                           fontFamily: AppTheme.pretendardFontFamily
+                                         ),
+                                       )
                                     ],
                                   ),
                                 )
@@ -267,79 +253,78 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                             ),
                           ),
                           const SizedBox(height: 10.0),
-
-                          // 짧은 소개
                           FadeTransition(
                             opacity: _heroImageFadeAnimation,
                             child: Text(
                               widget.character.shortBio,
-                              style: theme.textTheme.titleMedium
-                                  ?.copyWith(
-                                color: theme.colorScheme.onBackground
-                                    .withOpacity(0.75),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: theme.colorScheme.onBackground.withOpacity(0.75),
                                 height: 1.5,
-                                fontFamily:
-                                    AppTheme.pretendardFontFamily,
+                                fontFamily: AppTheme.pretendardFontFamily
                               ),
                             ),
                           ),
                           const SizedBox(height: 28.0),
 
-                          // About Me 섹션
                           _buildSectionTitle(context, "About Me"),
                           Wrap(
                             spacing: 10.0,
                             runSpacing: 10.0,
                             children: [
-                              _buildInfoPill(
-                                  context,
-                                  Icons.psychology_outlined,
-                                  "MBTI",
-                                  mbti),
-                              _buildInfoPill(
-                                  context,
-                                  Icons.interests_outlined,
-                                  "취미",
-                                  hobby),
-                              _buildInfoPill(
-                                  context,
-                                  Icons.favorite_border_rounded,
-                                  "좋아하는 것",
-                                  likes),
+                              _buildInfoPill(context, Icons.psychology_outlined, "MBTI", mbti),
+                              _buildInfoPill(context, Icons.interests_outlined, "취미", hobby),
+                              _buildInfoPill(context, Icons.favorite_border_rounded, "좋아하는 것", likes),
                             ],
                           ),
                           const SizedBox(height: 28.0),
 
-                          // 시뮬레이션 모드일 때만 보여줄 추가 정보
+                          // --- 피드 보기 버튼 추가 ---
+                          _buildSectionTitle(context, "${widget.character.name.split(" ").first}의 일상 엿보기"),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              icon: Icon(Icons.grid_on_rounded, color: theme.colorScheme.primary, size: 20),
+                              label: Text(
+                                "${widget.character.name}의 피드 보러가기",
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontFamily: AppTheme.pretendardFontFamily,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              onPressed: () => _navigateToFeedScreen(context),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.7), width: 1.5),
+                                padding: const EdgeInsets.symmetric(vertical: 14.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 32.0),
+
+
                           if (!widget.isFriendMode) ...[
-                            _buildSectionTitle(
-                                context, "AI와의 교감도"),
+                            _buildSectionTitle(context, "AI와의 교감도"),
                             Row(
                               children: [
                                 Expanded(
                                   child: LinearProgressIndicator(
                                     value: relationshipLevel / 5.0,
-                                    backgroundColor: theme
-                                        .colorScheme.surface
-                                        .withOpacity(0.5),
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(
-                                            theme.colorScheme.primary),
+                                    backgroundColor: theme.colorScheme.surface.withOpacity(0.5),
+                                    valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                                     minHeight: 10,
-                                    borderRadius:
-                                        BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
                                 Text(
                                   relationshipStatus,
-                                  style: theme.textTheme.bodyMedium
-                                      ?.copyWith(
-                                    color:
-                                        theme.colorScheme.primary,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
                                     fontWeight: FontWeight.w600,
-                                    fontFamily: AppTheme
-                                        .pretendardFontFamily,
+                                    fontFamily: AppTheme.pretendardFontFamily
                                   ),
                                 )
                               ],
@@ -347,102 +332,58 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                             const SizedBox(height: 32.0),
                           ],
 
-                          // 액션 버튼
                           FadeTransition(
                             opacity: _buttonsFadeAnimation,
                             child: Column(
                               children: [
                                 ElevatedButton.icon(
-                                  icon: Icon(
-                                    widget.isFriendMode
-                                        ? Icons.phone_in_talk_outlined
-                                        : Icons.play_arrow_rounded,
-                                    size: 22,
-                                  ),
-                                  label: Text(widget.isFriendMode
-                                      ? '음성으로 대화하기'
-                                      : '스토리 시작하기'),
+                                  icon: Icon(widget.isFriendMode ? Icons.phone_in_talk_outlined : Icons.play_arrow_rounded, size: 22),
+                                  label: Text(widget.isFriendMode ? '음성으로 대화하기' : '스토리 시작하기'),
                                   onPressed: widget.isFriendMode
                                       ? () => _startCall(context)
-                                      : () =>
-                                          _startSimulation(context),
+                                      : () => _startSimulation(context),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        theme.colorScheme.primary,
-                                    foregroundColor:
-                                        theme.colorScheme.onPrimary,
-                                    minimumSize: const Size(
-                                        double.infinity, 52),
-                                    textStyle: theme
-                                        .textTheme.titleMedium
-                                        ?.copyWith(
-                                      fontWeight:
-                                          FontWeight.bold,
-                                      fontFamily: AppTheme
-                                          .pretendardFontFamily,
-                                      letterSpacing: 0.5,
-                                    ),
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor: theme.colorScheme.onPrimary,
+                                    minimumSize: const Size(double.infinity, 52),
+                                    textStyle: theme.textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: AppTheme.pretendardFontFamily,
+                                        letterSpacing: 0.5),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                              16.0),
+                                      borderRadius: BorderRadius.circular(16.0),
                                     ),
                                     elevation: 4,
-                                    shadowColor: theme
-                                        .colorScheme.primary
-                                        .withOpacity(0.3),
+                                    shadowColor: theme.colorScheme.primary.withOpacity(0.3),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
                                 TextButton.icon(
-                                  icon: Icon(
-                                    Icons.sms_outlined,
-                                    size: 20,
-                                    color: theme.colorScheme.onBackground
-                                        .withOpacity(0.7),
-                                  ),
+                                  icon: Icon(Icons.sms_outlined, size: 20, color: theme.colorScheme.onBackground.withOpacity(0.7)),
                                   label: Text(
                                     '텍스트로 메시지 보내기',
-                                    style: theme
-                                        .textTheme.bodyMedium
-                                        ?.copyWith(
-                                      color: theme.colorScheme
-                                          .onBackground
-                                          .withOpacity(0.7),
-                                      fontWeight:
-                                          FontWeight.w500,
-                                      fontFamily: AppTheme
-                                          .pretendardFontFamily,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onBackground.withOpacity(0.7),
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: AppTheme.pretendardFontFamily
                                     ),
                                   ),
                                   onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              '텍스트 채팅 기능 (구현 예정)')),
+                                     ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('텍스트 채팅 기능 (구현 예정)')),
                                     );
                                   },
                                   style: TextButton.styleFrom(
-                                    minimumSize: const Size(
-                                        double.infinity, 48),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                              12.0),
+                                     minimumSize: const Size(double.infinity, 48),
+                                     shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
                                   ),
                                 )
                               ],
                             ),
                           ),
-
-                          // 하단 여백
-                          SizedBox(
-                              height: MediaQuery.of(context)
-                                      .padding
-                                      .bottom +
-                                  24),
+                          SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
                         ],
                       ),
                     ),
@@ -451,8 +392,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
               ),
             ),
           ),
-
-          // 4. 상단 AppBar
           Positioned(
             top: 0,
             left: 0,
@@ -466,15 +405,11 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                   onTap: () => Navigator.of(context).pop(),
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.25),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white70,
-                      size: 20,
-                    ),
+                     decoration: BoxDecoration(
+                       color: Colors.black.withOpacity(0.25),
+                       borderRadius: BorderRadius.circular(12),
+                     ),
+                    child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white.withOpacity(0.9), size: 20),
                   ),
                 ),
               ),
@@ -482,28 +417,20 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                    onTap: () {
-                      // 추가 옵션
-                    },
+                    onTap: () { /* 추가 옵션 */ },
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.25),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                       decoration: BoxDecoration(
+                         color: Colors.black.withOpacity(0.25),
+                         borderRadius: BorderRadius.circular(12),
+                       ),
                       padding: const EdgeInsets.all(8),
-                      child: const Icon(
-                        Icons.more_horiz_rounded,
-                        color: Colors.white70,
-                        size: 24,
-                      ),
+                      child: Icon(Icons.more_horiz_rounded, color: Colors.white.withOpacity(0.9), size: 24),
                     ),
                   ),
                 ),
               ],
-              systemOverlayStyle: isDarkMode
-                  ? SystemUiOverlayStyle.light
-                  : SystemUiOverlayStyle.dark,
+              systemOverlayStyle: isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
             ),
           ),
         ],
@@ -511,7 +438,6 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
     );
   }
 
-  // 섹션 타이틀 빌더
   Widget _buildSectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
     return Padding(
@@ -528,30 +454,24 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
     );
   }
 
-  // 정보 Pill 빌더
-  Widget _buildInfoPill(
-      BuildContext context, IconData icon, String label, String value) {
+  Widget _buildInfoPill(BuildContext context, IconData icon, String label, String value) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface
-            .withOpacity(isDarkMode ? 0.8 : 1.0),
+        color: theme.colorScheme.surface.withOpacity(isDarkMode ? 0.8 : 1.0),
         borderRadius: BorderRadius.circular(20.0),
         border: Border.all(
-          color: isDarkMode
-              ? theme.dividerColor.withOpacity(0.25)
-              : theme.dividerColor.withOpacity(0.6),
-          width: 1,
+          color: isDarkMode ? theme.dividerColor.withOpacity(0.25) : theme.dividerColor.withOpacity(0.6),
+          width: 1
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(
-                isDarkMode ? 0.12 : 0.04),
+            color: Colors.black.withOpacity(isDarkMode ? 0.12 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
-          ),
+          )
         ],
       ),
       child: Row(
@@ -561,12 +481,11 @@ class _CharacterProfileScreenState extends State<CharacterProfileScreen>
           const SizedBox(width: 10.0),
           Flexible(
             child: Text(
-              value,
+              value, // 값만 표시
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-                fontFamily: AppTheme.pretendardFontFamily,
-              ),
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: AppTheme.pretendardFontFamily),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),

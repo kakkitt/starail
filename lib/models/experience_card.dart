@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ExperienceCard {
   final String title;
   final String description;
+  
   final IconData icon;
   final Color color;
   final Color highlightColor;

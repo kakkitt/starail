@@ -1,5 +1,5 @@
-name: ai_phone_app
-description: "몰입형 AI 음성 경험 앱"
+name: ai_voice_dev
+description: A new Flutter project for LUMINA.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -10,15 +10,21 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  google_fonts: ^6.2.1
+   # 3D 및 인터랙티브 효과
+  vector_math: ^2.1.4
+  sensors_plus: ^6.1.1
+  audioplayers: ^5.1.0
   
   # 애니메이션 및 시각 효과
   flutter_animate: ^4.2.0
   simple_animations: ^5.0.0
   lottie: ^2.6.0  # 추가
-  
-  # 오디오
-  audioplayers: ^5.1.0  # 추가
-  
+  flutter_svg: ^2.1.0  # SVG 렌더링을 위해 추가
+
+  # 비디오
+  video_player: ^2.7.2
+
   # 상태 관리
   provider: ^6.0.5
   
@@ -27,6 +33,13 @@ dependencies:
 
   # SupaBase DB
   supabase_flutter: ^1.10.14
+
+  # 자동으로 다음 화면 넘어감(필요 없을 수도 있음)
+  auto_route: ^7.8.0 
+  intl: ^0.20.2
+
+ 
+
 
 dev_dependencies:
   flutter_test:
@@ -41,6 +54,7 @@ flutter:
     # - assets/audio/
     - assets/lottie/
     - assets/fonts/
+    - assets/videos/
   
   fonts:
     - family: GmarketSans
@@ -60,3 +74,7 @@ flutter:
           weight: 500
         - asset: assets/fonts/Pretendard-Bold.ttf
           weight: 700
+    
+    - family: Nova Round
+      fonts:
+        - asset: assets/fonts/NovaRound-Regular.ttf
