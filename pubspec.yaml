@@ -51,6 +51,7 @@ flutter:
   
   assets:
     - assets/images/
+    - assets/images/nayeon/
     # - assets/audio/
     - assets/lottie/
     - assets/fonts/

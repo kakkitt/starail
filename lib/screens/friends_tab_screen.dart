@@ -24,7 +24,7 @@ class _FriendsTabScreenState extends State<FriendsTabScreen> {
       id: 'friend_female_01',
       name: '이나연',
       imageAssetPath: 'assets/images/nayeon/character1.png', // 실제 파일 경로
-      shortBio: '언제나 네 편이 되어줄게. 힘든 일 있으면 나한테 다 털어놔도 괜찮아. 같이 맛있는 거 먹으면서 수다 떨자!',
+      shortBio: '꾸안꾸 인생 살아가는 중. 웃기면 다 친구야!',
       statusMessage: '오늘 저녁엔 뭐하고 놀까? 😊',
     ),
     Character(
