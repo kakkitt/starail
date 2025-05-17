@@ -15,6 +15,7 @@ class AppTheme {
   static const Color lightAccent = luminaPink;
   static const Color lightBottomNavBackground = Colors.white;
   static const Color lightUnselectedTabIcon = Color(0xFFB0AEC2);
+  static const Color darkSurfaceColor = Color(0xFF2C2C2E);
 
   static const Color darkPrimaryBackground = Color(0xFF201D33);
   static const Color darkSecondaryBackground = Color(0xFF302C48);
